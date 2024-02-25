@@ -2,11 +2,13 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pizza_app/screens/auth/blocs/sign_in_bloc/sign_in_bloc.dart';
-import 'package:pizza_app/screens/home/blocs/bloc/get_pizza_bloc.dart';
+import 'package:pizza_app/screens/home/blocs/delete_pizza_bloc/delete_pizza_bloc.dart';
+import 'package:pizza_app/screens/home/views/add_pizza_screen.dart';
 import 'package:pizza_app/screens/home/views/details_screen.dart';
+import '../blocs/get_pizza_bloc/get_pizza_bloc.dart';
 
 class HomeScreen extends StatelessWidget {
-  const HomeScreen({super.key});
+  const HomeScreen({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -25,6 +27,17 @@ class HomeScreen extends StatelessWidget {
           ],
         ),
         actions: [
+          IconButton(
+            onPressed: () => {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const AddPizzaScreen(),
+                ),
+              )
+            },
+            icon: const Icon(CupertinoIcons.add),
+          ),
           IconButton(onPressed: () {}, icon: const Icon(CupertinoIcons.cart)),
           IconButton(
               onPressed: () {
@@ -43,7 +56,7 @@ class HomeScreen extends StatelessWidget {
                       crossAxisCount: 2,
                       crossAxisSpacing: 16,
                       mainAxisSpacing: 16,
-                      childAspectRatio: 9 / 16),
+                      childAspectRatio: 9 / 20),
                   itemCount: state.pizzas.length,
                   itemBuilder: (context, int i) {
                     return Material(
@@ -66,6 +79,14 @@ class HomeScreen extends StatelessWidget {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
+                            IconButton(
+                              onPressed: () {
+                                context.read<DeletePizzaBloc>().add(
+                                    DeletePizzaRequested(
+                                        state.pizzas[i].pizzaId));
+                              },
+                              icon: const Icon(Icons.close),
+                            ),
                             Image.network(state.pizzas[i].picture),
                             Padding(
                               padding:
